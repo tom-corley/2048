@@ -1,8 +1,18 @@
-# Imports
+# Imports and setting up database
 from tkinter import *
 import sqlite3
 from random import randrange
 
+try:
+    conn = sqlite3.connect('high_scores.db')
+    c = conn.cursor()
+    c.execute("CREATE TABLE scores (score int);")
+    c.execute("DELETE * FROM scores;")
+    #c.execute("INSERT INTO scores (score) VALUES 0;")
+    conn.commit()
+    conn.close()
+except:
+    pass
 """ 
     IDEAS: 
         1 High Score on database _/
@@ -46,7 +56,7 @@ class Game:
         c = conn.cursor()
         c.execute("SELECT *,oid FROM scores")
         scs = c.fetchall()
-        self.highscore = scs[0][0]
+        self.highscore = str(scs[0][0])
         conn.commit()
         conn.close()
 
@@ -91,7 +101,7 @@ class Game:
         self.score = 0
         self.turncount = 1
         Label(self.root, text="2048!!!", font=('Helvetica',12)).grid(row=0,column=0,columnspan=1, pady=5)
-        Label(self.root, text="High Score: "+self.highscore).grid(row=0,column=1,columnspan=1, pady=5)
+        Label(self.root, text="High Score: "+str(self.highscore)).grid(row=0,column=1,columnspan=1, pady=5)
         Label(self.root, text="turn: "+str(self.turncount)).grid(row=0, column=2, pady=5)
         Label(self.root, text="score: "+str(self.score)).grid(row=0, column=3, pady=5)
         for i in range(4):
@@ -163,7 +173,7 @@ class Game:
 
             c.execute("SELECT *, oid FROM scores")
             scs = c.fetchall()
-            self.highscore = scs[0][0]
+            self.highscore = str(scs[0][0])
             conn.commit()
             conn.close()
             return
